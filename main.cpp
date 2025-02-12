@@ -36,12 +36,15 @@ struct s_ip_hdr // IPv4-пакет
 
 };
 
-unsigned short CalculateChecksum(unsigned short* pBuffer, int size) {
+unsigned short CalculateChecksum(unsigned short* pBuffer, int size)
+{
     ULONG checksum = 0;
-    for (int i = 0; i < size / 2; i++) {
+    for (int i = 0; i < size / 2; i++)
+    {
         checksum += pBuffer[i];
     }
-    if (size % 2) {
+    if (size % 2)
+    {
         checksum += ((BYTE*)pBuffer)[size - 1];
     }
     checksum = (checksum >> 16) + (checksum & 0xFFFF);
@@ -56,7 +59,8 @@ int ping(const char* ip_address)
     struct sockaddr_in dest_addr_in;
     wVersionRequested = MAKEWORD(2, 2);
     int err = WSAStartup(wVersionRequested, &wsaData);
-    if (err != 0) {
+    if (err != 0)
+    {
         printf("WSAStartup failed with error: %d\n", err);
         return 0;
     }
@@ -101,7 +105,8 @@ int ping(const char* ip_address)
     memcpy(packet, &icmp_hdr, sizeof(icmp_hdr));
    
     // Отправка ICMP-пакета
-    if (sendto(sock_raw, (char*)&packet, sizeof(icmp_hdr) + datalen, 0, dest_addr, local_addrlen) <= 0) {
+    if (sendto(sock_raw, (char*)&packet, sizeof(icmp_hdr) + datalen, 0, dest_addr, local_addrlen) <= 0)
+    {
         closesocket(sock_raw);
         WSACleanup();
         return 0;
@@ -119,10 +124,12 @@ int ping(const char* ip_address)
         printf("%c", buffer[i]);
     }
 
-    if (icmp_header->Type == 0) {
+    if (icmp_header->Type == 0)
+    {
         printf("Received ICMP ECHO REPLY from %s\n", inet_ntoa(dest_addr_in.sin_addr));
     }
-    else {
+    else
+    {
         printf("Received NON-echo reply");
     }
 
